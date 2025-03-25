@@ -1,0 +1,39 @@
+services:
+    php-httpd:
+        build:
+            context: .
+        container_name: simars_app
+        restart: always
+        ports:
+            - 8080:80
+        environment:
+            - TZ=Asia/Jakarta
+        volumes:
+#sesuaikan dengan direktori di server hocker host
+            - /home/xen:/var/www/html
+        networks:
+            - proxy
+    cups:
+        build:
+            context: ./cups
+        container_name: cups
+        restart: always
+        ports:
+            - 631:631
+        devices:
+            - /dev/bus/usb:/dev/bus/usb
+        environment:
+            - CUPSADMIN=print
+            - CUPSPASSWORD=print
+            - TZ=Asia/Jakarta
+        volumes:
+            - cups_data:/etc/cups
+        networks:
+            - proxy
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+    cups_data:
